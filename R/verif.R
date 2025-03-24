@@ -59,3 +59,35 @@ is_solved_takuzu <- function(board) {
   # Ensuite vérifier les règles du Takuzu
   return(check_takuzu(board))
 }
+
+# Fonction pour valider les règles du Takuzu
+is_valid_takuzu <- function(grid) {
+  n <- nrow(grid)
+
+  # Vérifier les lignes
+  for (i in 1:n) {
+    # Vérifier qu'il y a un nombre égal de 0 et 1 dans chaque ligne
+    if (sum(grid[i, ] == 0, na.rm = TRUE) != sum(grid[i, ] == 1, na.rm = TRUE)) {
+      return(FALSE)
+    }
+    # Vérifier qu'il n'y a pas de deux chiffres consécutifs identiques
+    if (any(diff(grid[i, ], na.rm = TRUE) == 0)) {
+      return(FALSE)
+    }
+  }
+
+  # Vérifier les colonnes
+  for (j in 1:n) {
+    # Vérifier qu'il y a un nombre égal de 0 et 1 dans chaque colonne
+    if (sum(grid[, j] == 0, na.rm = TRUE) != sum(grid[, j] == 1, na.rm = TRUE)) {
+      return(FALSE)
+    }
+    # Vérifier qu'il n'y a pas de deux chiffres consécutifs identiques
+    if (any(diff(grid[, j], na.rm = TRUE) == 0)) {
+      return(FALSE)
+    }
+  }
+
+  return(TRUE)
+}
+

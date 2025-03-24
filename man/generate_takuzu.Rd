@@ -18,9 +18,7 @@ Une matrice de taille \code{n x n} contenant des 0, 1 et \code{NA} (cases vides)
 \description{
 Cette fonction génère une grille Takuzu de taille \code{n x n} (avec \code{n} pair),
 en respectant les règles de base : pas plus de 2 zéros ou 2 uns consécutifs,
-et autant de 0 que de 1 par ligne/colonne dans la solution.
-Puis elle retire aléatoirement un certain pourcentage de cases pour obtenir
-une grille incomplète à résoudre.
+autant de 0 que de 1 par ligne/colonne dans la solution.
 }
 \examples{
 puzzle <- generate_takuzu(6, 0.5)

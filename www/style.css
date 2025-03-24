@@ -1,0 +1,196 @@
+/* Style global */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.1); /* Fond légèrement foncé */
+    overflow: hidden; /* Empêche le scroll */
+}
+
+/* Fond d'écran avec ajustement */
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('background.png') no-repeat center center;
+    background-size: 130%;
+    opacity: 0.2;
+    z-index: -1;
+}
+
+/* Conteneur des écrans */
+.screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Titre TAKUZU ajusté */
+.title {
+    font-size: 9rem;
+    color: #39417F;
+    text-shadow: 5px 5px 10px ;
+    margin-top: 30px; /* Descend le titre */
+}
+
+/* Boutons dans l'écran des paramètres */
+.btn-size {
+    font-size: 1.5rem;
+    padding: 5px 20px;
+    background-color:#678DC6;
+    color:white;
+    border: 3px solid #39417F;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin: 10px;
+}
+
+.btn-size:hover {
+    background-color: #93B3E4;
+    border: 3px solid #39417F;
+    color:white;
+    transform: scale(1.1);
+}
+
+/* Texte des difficultés (pour correspondre avec les autres textes) */
+.difficulty-text, .intro-text {
+    font-size: 1.5rem;
+    color: #39417F;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* Bouton générique pour générer la grille */
+.btn-custom {
+    font-size: 2rem;
+    padding: 10px 25px;
+    background-color:#678DC6;
+    color:white;
+    border: 3px solid #39417F;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: #93B3E4;
+    border: 3px solid #39417F;
+    color:white;
+    transform: scale(1.1);
+}
+
+
+#parameters .title {
+    font-size: 4rem;  /* Réduit la taille du texte */
+    position: absolute;  /* Positionnement absolu */
+    top: 20px;  /* Aligne le titre tout en haut */
+    left: 50%;  /* Centre le titre horizontalement */
+    transform: translateX(-50%);  /* Centre le titre exactement au milieu */
+    margin: 0;  /* Retire toute marge par défaut */
+    padding: 10px 0;  /* Ajoute un peu de padding si nécessaire */
+    text-align: center;  /* Centre le texte */
+}
+
+
+/* Zone de délimitation des paramètres */
+.parameters-zone {
+    background-color: rgba(255, 255, 255, 0.5); /* Fond blanc semi-transparent */
+    border: 3px solid #39417F; /* Bordure de la zone */
+    border-radius: 15px; /* Coins arrondis */
+    padding: 30px 20px; /* Espacement interne */
+    width: 50%; /* Largeur de la zone, tu peux ajuster cette valeur */
+    max-width: 600px; /* Largeur maximale */
+    margin-top: 50px; /* Espace au-dessus de la zone */
+    margin-bottom: 20px; /* Espace en bas de la zone */
+    margin-left: auto; /* Centrage horizontal */
+    margin-right: auto; /* Centrage horizontal */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Ombre légère */
+
+    /* Ajout de flexbox pour centrer les éléments à l'intérieur */
+    display: flex;
+    flex-direction: column; /* Colonne verticale */
+    align-items: center; /* Centrer horizontalement */
+    justify-content: flex-start; /* Aligne les éléments au début (haut) */
+}
+
+/* Optionnel : au survol, rendre la zone plus claire */
+.parameters-zone:hover {
+    background-color: rgba(255, 255, 255, 0.8); /* Augmente l'opacité au survol */
+}
+
+/* Modifier le style du titre dans la partie jeu pour le placer tout en haut */
+#game .title {
+    font-size: 4rem;  /* Réduit la taille du texte */
+    position: absolute;  /* Positionnement absolu */
+    top: 20px;  /* Aligne le titre tout en haut */
+    left: 50%;  /* Centre le titre horizontalement */
+    transform: translateX(-50%);  /* Centre le titre exactement au milieu */
+    margin: 0;  /* Retire toute marge par défaut */
+    padding: 10px 0;  /* Ajoute un peu de padding si nécessaire */
+    text-align: center;  /* Centre le texte */
+}
+
+/* Grille */
+#game #gridUI {
+    margin-top: 70px; /* Ajout d'un espace pour déplacer la grille vers le bas */
+}
+
+/* Style pour la table de la grille */
+#game #gridUI table {
+    width: 100%; /* Grille prend toute la largeur disponible */
+    border-collapse: collapse; /* Enlève les espacements entre les cellules */
+}
+
+/* Style pour chaque cellule de la grille */
+#game #gridUI td {
+    width: 60px;  /* Largeur des cases */
+    height: 60px; /* Hauteur des cases */
+    border: 1px solid #ccc; /* Bordure autour des cases */
+    text-align: center;  /* Centrer le contenu (les chiffres) */
+    background-color: white; /* Fond blanc pour les cases */
+    position: relative; /* Nécessaire pour le positionnement absolu du champ input */
+
+}
+
+/* Style des numericInput pour occuper toute la case */
+#game #gridUI input[type="number"] {
+    width: 100%; /* Remplir toute la largeur de la cellule */
+    height: 100%; /* Remplir toute la hauteur de la cellule */
+    text-align: center; /* Centrer le texte à l'intérieur du champ */
+    border: none; /* Enlever la bordure interne */
+    background-color: transparent; /* Fond transparent pour que ce soit intégré dans la cellule */
+    font-size: 1.2rem; /* Taille de la police pour les nombres */
+    position: absolute; /* Nécessaire pour occuper tout l'espace de la cellule */
+    top: 0;
+    left: 0;
+    z-index: 1; /* S'assurer que le champ se trouve bien au-dessus du fond de la cellule */
+}
+
+/* Option pour les numericInput lorsqu'ils sont vides ou sélectionnés */
+#game #gridUI input[type="number"]:focus {
+    outline: none; /* Enlever le contour de sélection */
+}
+
+
+/* Conteneur des boutons "Vérifier" et "Retour aux paramètres" */
+#game .btn-container {
+    display: flex;
+    flex-direction: column; /* Dispose les boutons verticalement */
+    position: absolute; /* Positionne les boutons de manière absolue */
+    top: 150px; /* Place les boutons sous la grille */
+    right: 30px; /* Décalage des boutons à droite de la page */
+    z-index: 2; /* S'assure que les boutons sont visibles au-dessus de la grille */
+}
+
+/* Boutons "Vérifier" et "Retour aux paramètres" plus petits */
+#game .btn-custom {
+    margin-bottom: 15px; /* Espace entre les boutons */
+    }
