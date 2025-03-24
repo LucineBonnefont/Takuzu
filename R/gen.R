@@ -1,15 +1,11 @@
-#' Génère une grille Takuzu incomplète
+#' Génère un puzzle Takuzu
 #'
-#' Cette fonction génère une grille Takuzu de taille \code{n x n} (avec \code{n} pair),
-#' en respectant les règles de base : pas plus de 2 zéros ou 2 uns consécutifs,
-#' autant de 0 que de 1 par ligne/colonne dans la solution.
+#' Cette fonction crée une grille Takuzu de taille n x n. Elle génère d'abord une solution complète,
+#' puis transforme cette solution en puzzle en retirant un pourcentage de cases en fonction du paramètre.
 #'
-#' @param n Taille de la grille (nombre de lignes et de colonnes), doit être pair (ex. 6, 8).
-#' @param difficulty Un nombre entre 0 et 1 indiquant la proportion de cases à vider
-#' (ex. 0.5 = on enlève 50% des cases).
+#' @param n taille de la grille (doit être pair (ex. 6, 8).)
+#' @param difficulty Un nombre entre 0 et 1 indiquant la proportion de cases à vider (ex. 0.5 = on enlève 50% des cases).
 #' @return Une matrice de taille \code{n x n} contenant des 0, 1 et \code{NA} (cases vides).
-#' @examples
-#' puzzle <- generate_takuzu(6, 0.5)
 #' @export
 generate_takuzu <- function(n = 6, difficulty = 0.5) {
   if (n %% 2 != 0) {
@@ -18,19 +14,19 @@ generate_takuzu <- function(n = 6, difficulty = 0.5) {
   if (difficulty < 0 || difficulty > 1) {
     stop("Le paramètre 'difficulty' doit être compris entre 0 et 1.")
   }
-
+  
   # Génère une solution complète
   solution <- generate_takuzu_solution(n)
-
+  
   # Convertit cette solution en puzzle en retirant un pourcentage de cases
   puzzle <- solution
   total_cells <- n * n
   nb_to_remove <- floor(total_cells * difficulty)
-
+  
   # On choisit au hasard quelles cases seront vides (NA)
   remove_indices <- sample(total_cells, nb_to_remove)
   puzzle[remove_indices] <- NA
-
+  
   return(puzzle)
 }
 
@@ -41,9 +37,8 @@ generate_takuzu <- function(n = 6, difficulty = 0.5) {
 #' respectant les règles du Takuzu. Elle utilise une approche backtracking pour
 #' remplir la grille case par case.
 #'
-#' @param n Taille de la grille (pair).
-#' @return Une matrice \code{n x n} remplie de 0 et 1.
-#' @keywords internal
+#' @param n  taille de la grille (doit être pair (ex. 6, 8).)
+#' @return Une matrice \code{n x n} avec de 0 et 1.
 generate_takuzu_solution <- function(n) {
   board <- matrix(NA, nrow = n, ncol = n)
   res <- fill_board(board, 1, 1)
@@ -51,7 +46,9 @@ generate_takuzu_solution <- function(n) {
 }
 
 
-#' Fonction récursive de backtracking
+#' Backtracking
+#'
+#' #' Remplit récursivement la grille en utilisant un algorithme de backtracking pour obtenir une solution complète de Takuzu.
 #'
 #' @param board Matrice en cours de remplissage.
 #' @param row Numéro de la ligne en cours.
@@ -60,12 +57,10 @@ generate_takuzu_solution <- function(n) {
 #' @keywords internal
 fill_board <- function(board, row, col) {
   n <- nrow(board)
-
-  # Si on a dépassé la dernière ligne, c'est que le board est rempli
   if (row > n) {
     return(board)
   }
-
+  
   # Calcul de la case suivante
   next_col <- col + 1
   next_row <- row
@@ -73,11 +68,11 @@ fill_board <- function(board, row, col) {
     next_col <- 1
     next_row <- row + 1
   }
-
+  
   # On tente de placer 0 ou 1
   for (val in c(0, 1)) {
     board[row, col] <- val
-
+    
     if (is_valid_so_far(board, row, col)) {
       # Appel récursif pour la case suivante
       result <- fill_board(board, next_row, next_col)
@@ -88,13 +83,14 @@ fill_board <- function(board, row, col) {
     # Annule si pas valide
     board[row, col] <- NA
   }
-
+  
   # Si aucune valeur ne fonctionne, on remonte (NULL)
   return(NULL)
 }
 
-
-#' Vérifie si la case (row, col) est valide jusqu'à présent
+#' Vérifie la validité partielle d'une case dans une grille Takuzu
+#'
+#' Vérifie si la valeur placée dans la cellule (row, col) ne viole pas les règles du Takuzu jusqu'à présent.
 #'
 #' @param board Matrice partiellement remplie.
 #' @param row Ligne de la case à vérifier.
@@ -104,12 +100,12 @@ fill_board <- function(board, row, col) {
 is_valid_so_far <- function(board, row, col) {
   val <- board[row, col]
   if (is.na(val)) return(TRUE)
-
+  
   n <- nrow(board)
-
+  
   # --- Vérification sur la ligne ---
   row_values <- board[row, ]
-
+  
   # 1) Pas plus de 2 identiques consécutifs
   if (has_three_consecutive(row_values)) {
     return(FALSE)
@@ -120,10 +116,10 @@ is_valid_so_far <- function(board, row, col) {
       return(FALSE)
     }
   }
-
+  
   # --- Vérification sur la colonne ---
   col_values <- board[, col]
-
+  
   # 1) Pas plus de 2 identiques consécutifs
   if (has_three_consecutive(col_values)) {
     return(FALSE)
@@ -134,7 +130,7 @@ is_valid_so_far <- function(board, row, col) {
       return(FALSE)
     }
   }
-
+  
   return(TRUE)
 }
 

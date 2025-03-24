@@ -2,8 +2,10 @@
 % Please edit documentation in R/verif.R
 \name{check_takuzu}
 \alias{check_takuzu}
-\title{Vérifie qu'une grille Takuzu est valide}
+\title{Vérifie qu'une valeur dans le jeu de Takuzu est valide}
 \usage{
+check_takuzu(board)
+
 check_takuzu(board)
 }
 \arguments{
@@ -11,9 +13,11 @@ check_takuzu(board)
 }
 \value{
 \code{TRUE} si la grille est valide, \code{FALSE} sinon.
+
+oui ou non
 }
 \description{
-Cette fonction s'assure qu'une grille complétée (sans \code{NA}) respecte
-les règles du Takuzu : pas plus de 2 zéros/uns consécutifs, et autant de 0 que de 1
-dans chaque ligne et colonne.
+Vérifie si la valeur placée dans la cellule (row, col) ne viole pas les règles du Takuzu.
+
+pour le bouton verification
 }

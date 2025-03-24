@@ -7,14 +7,13 @@
 generate_takuzu_solution(n)
 }
 \arguments{
-\item{n}{Taille de la grille (pair).}
+\item{n}{taille de la grille (doit être pair (ex. 6, 8).)}
 }
 \value{
-Une matrice \code{n x n} remplie de 0 et 1.
+Une matrice \code{n x n} avec de 0 et 1.
 }
 \description{
 Cette fonction interne construit une grille entièrement résolue (pas de NA),
 respectant les règles du Takuzu. Elle utilise une approche backtracking pour
 remplir la grille case par case.
 }
-\keyword{internal}

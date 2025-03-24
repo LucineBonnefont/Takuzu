@@ -3,3 +3,5 @@
 export(check_takuzu)
 export(generate_takuzu)
 export(is_solved_takuzu)
+export(is_valid_takuzu)
+export(takuzu_feedback)

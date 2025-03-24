@@ -2,7 +2,7 @@
 % Please edit documentation in R/gen.R
 \name{is_valid_so_far}
 \alias{is_valid_so_far}
-\title{Vérifie si la case (row, col) est valide jusqu'à présent}
+\title{Vérifie la validité partielle d'une case dans une grille Takuzu}
 \usage{
 is_valid_so_far(board, row, col)
 }
@@ -17,6 +17,6 @@ is_valid_so_far(board, row, col)
 \code{TRUE} si c'est valide, \code{FALSE} sinon.
 }
 \description{
-Vérifie si la case (row, col) est valide jusqu'à présent
+Vérifie si la valeur placée dans la cellule (row, col) ne viole pas les règles du Takuzu jusqu'à présent.
 }
 \keyword{internal}

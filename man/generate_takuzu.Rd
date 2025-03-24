@@ -2,24 +2,19 @@
 % Please edit documentation in R/gen.R
 \name{generate_takuzu}
 \alias{generate_takuzu}
-\title{Génère une grille Takuzu incomplète}
+\title{Génère un puzzle Takuzu}
 \usage{
 generate_takuzu(n = 6, difficulty = 0.5)
 }
 \arguments{
-\item{n}{Taille de la grille (nombre de lignes et de colonnes), doit être pair (ex. 6, 8).}
+\item{n}{taille de la grille (doit être pair (ex. 6, 8).)}
 
-\item{difficulty}{Un nombre entre 0 et 1 indiquant la proportion de cases à vider
-(ex. 0.5 = on enlève 50\% des cases).}
+\item{difficulty}{Un nombre entre 0 et 1 indiquant la proportion de cases à vider (ex. 0.5 = on enlève 50\% des cases).}
 }
 \value{
 Une matrice de taille \code{n x n} contenant des 0, 1 et \code{NA} (cases vides).
 }
 \description{
-Cette fonction génère une grille Takuzu de taille \code{n x n} (avec \code{n} pair),
-en respectant les règles de base : pas plus de 2 zéros ou 2 uns consécutifs,
-autant de 0 que de 1 par ligne/colonne dans la solution.
-}
-\examples{
-puzzle <- generate_takuzu(6, 0.5)
+Cette fonction crée une grille Takuzu de taille n x n. Elle génère d'abord une solution complète,
+puis transforme cette solution en puzzle en retirant un pourcentage de cases en fonction du paramètre.
 }

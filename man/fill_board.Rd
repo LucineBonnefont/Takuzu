@@ -2,7 +2,7 @@
 % Please edit documentation in R/gen.R
 \name{fill_board}
 \alias{fill_board}
-\title{Fonction récursive de backtracking}
+\title{Backtracking}
 \usage{
 fill_board(board, row, col)
 }
@@ -17,6 +17,6 @@ fill_board(board, row, col)
 La matrice complétée si une solution est trouvée, ou \code{NULL} sinon.
 }
 \description{
-Fonction récursive de backtracking
+#' Remplit récursivement la grille en utilisant un algorithme de backtracking pour obtenir une solution complète de Takuzu.
 }
 \keyword{internal}
