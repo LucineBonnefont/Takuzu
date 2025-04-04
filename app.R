@@ -6,8 +6,29 @@ library(takuzu)
 ui <- fluidPage(
   useShinyjs(),  # Active shinyjs pour gérer l'affichage dynamique
   tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "style.css")  # Inclusion du fichier CSS
+    tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),  # Inclusion du fichier CSS
+    tags$script(src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js")
   ),
+  
+  tags$script(HTML("
+      Shiny.addCustomMessageHandler('confetti', function(message) {
+        confetti({
+        spread: 5000,
+          particleCount: 7000,  // Augmentation du nombre de confettis pour un effet plus intense
+      origin: {  x: 0.5, y: 1.45  },   // Position de départ (milieu de l'écran)
+      gravity: 0.5,         // Gravité plus forte pour faire tomber les confettis rapidement
+      startVelocity: 100,    // Vitesse plus élevée pour que l'explosion soit encore plus massive
+      ticks: 200,           // Durée de vie des confettis (plus longtemps avant de disparaître)
+      colors: ['#FF5733', '#FF33FF', '#33FFF3', '#FFD700', '#FF0000', '#00FF00', '#1E90FF'],
+      shapes: ['circle', 'square', 'triangle'],  // Formes variées pour plus de diversité visuelle
+      angle: 90,            // Direction verticale pour que les confettis tombent droit
+      angleVariation: 5000,
+      decay: 0.9,           // Réduction progressive de la vitesse pour simuler une chute naturelle
+      drift: 0,             // Pas de dérive horizontale
+      gravity: 0.4            // Ajuste la chute pour une gravité plus naturelle
+        });
+      });
+    ")),
   
   # Fond d'écran
   div(class = "background"),
@@ -48,7 +69,8 @@ ui <- fluidPage(
              h2("TAKUZU", class = "title"),
              uiOutput("gridUI"),
              div(class = "btn-container",
-                 actionButton("edit_parameters", "Modifier les paramètres", class = "btn-custom")
+                 actionButton("edit_parameters", "Modifier les paramètres", class = "btn-custom"),
+                 actionButton("new_grid", "Nouvelle grille", class = "btn-custom")
              ),
              textOutput("result")
   ))
@@ -85,6 +107,15 @@ server <- function(input, output, session) {
   observeEvent(input$edit_parameters, {
     hide("game")
     show("parameters")
+  })
+  
+  observeEvent(input$new_grid, {
+    req(grid_size())
+    new_puzzle <- generate_takuzu(n = grid_size(), difficulty = input$difficulty)
+    puzzle(new_puzzle)
+    hide("parameters")
+    show("game")
+    output$result <- renderText("")
   })
   
   # Reactive qui combine la grille générée et les saisies utilisateur
@@ -168,13 +199,20 @@ server <- function(input, output, session) {
   observe({
     req(combinedGrid())
     grid <- combinedGrid()
+    
     # Si la grille est complète (aucun NA) et respecte toutes les règles, on affiche le message
     if (!any(is.na(grid)) && is_solved_takuzu(grid)) {
-      output$result <- renderText("Félicitations ! La grille est correctement résolue.")
+      session$sendCustomMessage("win", list())
+      session$sendCustomMessage("confetti", list())
+      
+      output$result <- renderText({
+        "FÉLICITATIONS!"
+      })
     } else {
       output$result <- renderText("")
     }
   })
+  
 }
 
 shinyApp(ui = ui, server = server)
