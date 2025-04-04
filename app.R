@@ -1,6 +1,5 @@
 library(shiny)
 library(shinyjs)
-library(shinyfullscreen)
 library(takuzu)
 
 ui <- fluidPage(
