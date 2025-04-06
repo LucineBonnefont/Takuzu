@@ -3,67 +3,59 @@ library(shinyjs)
 library(takuzu)
 
 ui <- fluidPage(
-  useShinyjs(),  # Active shinyjs pour gérer l'affichage dynamique
+  useShinyjs(),
   tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),  # Inclusion du fichier CSS
-    tags$script(src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js")
-  ),
-  
-  tags$script(HTML("
+    tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+    
+    # Inclusion du script de confetti
+    tags$script(src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"),
+    tags$script(HTML("
       Shiny.addCustomMessageHandler('confetti', function(message) {
         confetti({
-        spread: 5000,
-          particleCount: 7000,  // Augmentation du nombre de confettis pour un effet plus intense
-      origin: {  x: 0.5, y: 1.45  },   // Position de départ (milieu de l'écran)
-      gravity: 0.5,         // Gravité plus forte pour faire tomber les confettis rapidement
-      startVelocity: 100,    // Vitesse plus élevée pour que l'explosion soit encore plus massive
-      ticks: 200,           // Durée de vie des confettis (plus longtemps avant de disparaître)
-      colors: ['#FF5733', '#FF33FF', '#33FFF3', '#FFD700', '#FF0000', '#00FF00', '#1E90FF'],
-      shapes: ['circle', 'square', 'triangle'],  // Formes variées pour plus de diversité visuelle
-      angle: 90,            // Direction verticale pour que les confettis tombent droit
-      angleVariation: 5000,
-      decay: 0.9,           // Réduction progressive de la vitesse pour simuler une chute naturelle
-      drift: 0,             // Pas de dérive horizontale
-      gravity: 0.4            // Ajuste la chute pour une gravité plus naturelle
+          spread: 5000,
+          particleCount: 7000,
+          origin: { x: 0.5, y: 1.45 },
+          gravity: 0.5,
+          startVelocity: 100,
+          ticks: 200,
+          colors: ['#FF5733', '#FF33FF', '#33FFF3', '#FFD700', '#FF0000', '#00FF00', '#1E90FF'],
+          shapes: ['circle', 'square', 'triangle'],
+          angle: 90,
+          angleVariation: 5000,
+          decay: 0.9,
+          drift: 0,
+          gravity: 0.4
         });
       });
-    ")),
+    "))
+  ),
   
-  # Fond d'écran
   div(class = "background"),
   
-  # Écran d'accueil
+  #menu
   div(id = "welcome", class = "screen",
-      h1("TAKUZU", class = "title"),  # Titre stylisé
+      h1("TAKUZU", class = "title"),
       actionButton("start", "Je relève le défi", class = "btn-custom")
   ),
   
-  # Écran de choix des paramètres (taille et difficulté)
+  #parametre pour le joueur
   hidden(div(id = "parameters", class = "screen",
              div(class = "parameters-zone",
                  h2("TAKUZU", class = "title"),
-                 
-                 # Petit texte avant "Choisissez la taille de la grille"
                  p("Taille de la grille", class = "intro-text"),
-                 
-                 # Boutons pour choisir la taille de la grille
                  div(
                    actionButton("size_4", "4x4", class = "btn-size"),
                    actionButton("size_6", "6x6", class = "btn-size"),
                    actionButton("size_8", "8x8", class = "btn-size")
                  ),
-                 
-                 # Slider pour la difficulté
                  p("Difficulté (proportion de cases vides)", class = "difficulty-text"),
                  sliderInput("difficulty", NULL, min = 0, max = 1, value = 0.5, step = 0.1),
-                 
-                 # Bouton pour générer la grille
                  actionButton("generate", "Générer la grille", class = "btn-custom"),
                  br()
              )
   )),
   
-  # Zone du jeu (où la grille est affichée)
+  #zone de jeu
   hidden(div(id = "game", class = "screen",
              h2("TAKUZU", class = "title"),
              uiOutput("gridUI"),
@@ -77,24 +69,24 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   
-  # Stocke la grille générée et la taille de la grille
   puzzle <- reactiveVal(NULL)
-  grid_size <- reactiveVal(NULL)  # Pour stocker la taille de la grille
+  grid_size <- reactiveVal(NULL)
   
-  # Passage de l'écran d'accueil aux paramètres
+  # Identifiant unique pour le puzzle afin d'éviter la réutilisation d'inputId
+  puzzleID <- reactiveVal(0)
+  
   observeEvent(input$start, {
     hide("welcome")
     show("parameters")
   })
   
-  # Choix de la taille de la grille
   observeEvent(input$size_4, { grid_size(4) })
   observeEvent(input$size_6, { grid_size(6) })
   observeEvent(input$size_8, { grid_size(8) })
   
-  # Génération de la grille et passage à l'écran du jeu
   observeEvent(input$generate, {
     req(grid_size())
+    puzzleID(puzzleID() + 1)  # Incrémente l'ID pour la nouvelle grille
     new_puzzle <- generate_takuzu(n = grid_size(), difficulty = input$difficulty)
     puzzle(new_puzzle)
     hide("parameters")
@@ -102,22 +94,21 @@ server <- function(input, output, session) {
     output$result <- renderText("")
   })
   
-  # Bouton pour modifier les paramètres
+  observeEvent(input$new_grid, {
+    req(grid_size())
+    puzzleID(puzzleID() + 1)
+    new_puzzle <- generate_takuzu(n = grid_size(), difficulty = input$difficulty)
+    puzzle(new_puzzle)
+    hide("parameters")
+    show("game")
+    output$result <- renderText("")
+  })
+  
   observeEvent(input$edit_parameters, {
     hide("game")
     show("parameters")
   })
   
-  observeEvent(input$new_grid, {
-    req(grid_size())
-    new_puzzle <- generate_takuzu(n = grid_size(), difficulty = input$difficulty)
-    puzzle(new_puzzle)
-    hide("parameters")
-    show("game")
-    output$result <- renderText("")
-  })
-  
-  # Reactive qui combine la grille générée et les saisies utilisateur
   combinedGrid <- reactive({
     req(puzzle())
     grid <- puzzle()
@@ -125,7 +116,8 @@ server <- function(input, output, session) {
     for (i in seq_len(n)) {
       for (j in seq_len(n)) {
         if (is.na(grid[i, j])) {
-          cell_id <- paste0("cell_", i, "_", j)
+          # Incorporation de puzzleID dans l'inputId
+          cell_id <- paste0("cell_", puzzleID(), "_", i, "_", j)
           val <- input[[cell_id]]
           if (!is.null(val)) {
             grid[i, j] <- as.numeric(val)
@@ -136,14 +128,11 @@ server <- function(input, output, session) {
     grid
   })
   
-  # Affichage de la grille sous forme de table avec des numericInput
   output$gridUI <- renderUI({
     req(puzzle())
     originalGrid <- puzzle()
     userGrid <- combinedGrid()
     n <- nrow(originalGrid)
-    
-    # Obtention du feedback par cellule via takuzu_feedback()
     feedback <- takuzu_feedback(userGrid)
     
     tags$table(
@@ -151,9 +140,8 @@ server <- function(input, output, session) {
       lapply(seq_len(n), function(i) {
         tags$tr(
           lapply(seq_len(n), function(j) {
-            cell_id <- paste0("cell_", i, "_", j)
+            cell_id <- paste0("cell_", puzzleID(), "_", i, "_", j)
             
-            # Si la case est fixe (déjà remplie dans le puzzle), on l'affiche en texte non modifiable
             if (!is.na(originalGrid[i, j])) {
               tags$td(
                 originalGrid[i, j],
@@ -168,7 +156,6 @@ server <- function(input, output, session) {
                 "
               )
             } else {
-              # Pour les cases modifiables, le fond est rouge si la saisie est incorrecte, sinon blanc
               bg_color <- if (!is.na(userGrid[i, j]) && !feedback[i, j]) "red" else "#ffffff"
               tags$td(
                 numericInput(
@@ -194,24 +181,19 @@ server <- function(input, output, session) {
     )
   })
   
-  # Observer qui vérifie automatiquement la grille et félicite le joueur si elle est correctement complétée
+# Quand on gange c'est la fête  
   observe({
     req(combinedGrid())
     grid <- combinedGrid()
     
-    # Si la grille est complète (aucun NA) et respecte toutes les règles, on affiche le message
     if (!any(is.na(grid)) && is_solved_takuzu(grid)) {
-      session$sendCustomMessage("win", list())
       session$sendCustomMessage("confetti", list())
-      
-      output$result <- renderText({
-        "FÉLICITATIONS!"
-      })
+      output$result <- renderText("Félicitations ! La grille est correctement résolue.")
     } else {
       output$result <- renderText("")
     }
   })
-  
 }
 
 shinyApp(ui = ui, server = server)
+

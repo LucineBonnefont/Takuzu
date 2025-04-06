@@ -1,52 +1,4 @@
-#' Génère un puzzle Takuzu
-#'
-#' Cette fonction crée une grille Takuzu de taille n x n. Elle génère d'abord une solution complète,
-#' puis transforme cette solution en puzzle en retirant un pourcentage de cases en fonction du paramètre.
-#'
-#' @param n taille de la grille (doit être pair (ex. 6, 8).)
-#' @param difficulty Un nombre entre 0 et 1 indiquant la proportion de cases à vider (ex. 0.5 = on enlève 50% des cases).
-#' @return Une matrice de taille \code{n x n} contenant des 0, 1 et \code{NA} (cases vides).
-#' @export
-generate_takuzu <- function(n = 6, difficulty = 0.5) {
-  if (n %% 2 != 0) {
-    stop("La taille n doit être un nombre pair.")
-  }
-  if (difficulty < 0 || difficulty > 1) {
-    stop("Le paramètre 'difficulty' doit être compris entre 0 et 1.")
-  }
-  
-  # Génère une solution complète
-  solution <- generate_takuzu_solution(n)
-  
-  # Convertit cette solution en puzzle en retirant un pourcentage de cases
-  puzzle <- solution
-  total_cells <- n * n
-  nb_to_remove <- floor(total_cells * difficulty)
-  
-  # On choisit au hasard quelles cases seront vides (NA)
-  remove_indices <- sample(total_cells, nb_to_remove)
-  puzzle[remove_indices] <- NA
-  
-  return(puzzle)
-}
-
-
-#' Génère une solution Takuzu complète
-#'
-#' Cette fonction interne construit une grille entièrement résolue (pas de NA),
-#' respectant les règles du Takuzu. Elle utilise une approche backtracking pour
-#' remplir la grille case par case.
-#'
-#' @param n  taille de la grille (doit être pair (ex. 6, 8).)
-#' @return Une matrice \code{n x n} avec de 0 et 1.
-generate_takuzu_solution <- function(n) {
-  board <- matrix(NA, nrow = n, ncol = n)
-  res <- fill_board(board, 1, 1)
-  return(res)
-}
-
-
-#' Backtracking
+#' Backtracking pour avoir une grille complète juste
 #'
 #' #' Remplit récursivement la grille en utilisant un algorithme de backtracking pour obtenir une solution complète de Takuzu.
 #'
@@ -87,6 +39,65 @@ fill_board <- function(board, row, col) {
   # Si aucune valeur ne fonctionne, on remonte (NULL)
   return(NULL)
 }
+
+
+
+
+#' Génère une solution Takuzu complète
+#'
+#' Cette fonction interne construit une grille entièrement résolue (pas de NA),
+#' respectant les règles du Takuzu. Elle utilise une approche backtracking pour
+#' remplir la grille case par case.
+#'
+#' @param n  taille de la grille (doit être pair (ex. 6, 8).)
+#' @return Une matrice \code{n x n} avec de 0 et 1.
+generate_takuzu_solution <- function(n) {
+  board <- matrix(NA, nrow = n, ncol = n)
+  res <- fill_board(board, 1, 1)
+  return(res)
+}
+
+
+
+
+
+
+#' Génère un puzzle Takuzu
+#'
+#' On génère une grille complète et on enleve des cases 
+#'
+#' @param n taille
+#' @param difficulty proportion enlevé
+#' @return le plateau de jeu
+#' @export
+generate_takuzu <- function(n = 6, difficulty = 0.5) {
+  if (n %% 2 != 0) {
+    stop("La taille n doit être un nombre pair.")
+  }
+  if (difficulty < 0 || difficulty > 1) {
+    stop("Le paramètre 'difficulty' doit être compris entre 0 et 1.")
+  }
+    solution <- generate_takuzu_solution(n)
+  
+  puzzle <- solution
+  total_cells <- n * n
+  nb_to_remove <- floor(total_cells * difficulty)
+  
+  remove_indices <- sample(total_cells, nb_to_remove)
+  puzzle[remove_indices] <- NA
+  
+  return(puzzle)
+}
+
+
+
+
+
+
+
+# Les fonction utilisé pour les fonctions du package
+
+
 
 #' Vérifie la validité partielle d'une case dans une grille Takuzu
 #'
