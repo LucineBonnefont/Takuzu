@@ -2,13 +2,16 @@
 % Please edit documentation in R/verif.R
 \name{is_solved_takuzu}
 \alias{is_solved_takuzu}
-\title{titrev3}
+\title{Vérifie si une grille Takuzu est entièrement résolue}
 \usage{
 is_solved_takuzu(board)
 }
+\arguments{
+\item{board}{Une matrice \code{n x n} contenant des 0, des 1 et éventuellement des \code{NA} dans les cases non remplies.}
+}
 \value{
-oui ou non
+\code{TRUE} si la grille est entièrement résolue, \code{FALSE} sinon.
 }
 \description{
-pour le bouton verification encore
+Verifie si y'a des NA qui reste
 }

@@ -7,14 +7,13 @@
 generate_takuzu(n = 6, difficulty = 0.5)
 }
 \arguments{
-\item{n}{taille de la grille (doit être pair (ex. 6, 8).)}
+\item{n}{taille}
 
-\item{difficulty}{Un nombre entre 0 et 1 indiquant la proportion de cases à vider (ex. 0.5 = on enlève 50\% des cases).}
+\item{difficulty}{proportion enlevé}
 }
 \value{
-Une matrice de taille \code{n x n} contenant des 0, 1 et \code{NA} (cases vides).
+le plateau de jeu
 }
 \description{
-Cette fonction crée une grille Takuzu de taille n x n. Elle génère d'abord une solution complète,
-puis transforme cette solution en puzzle en retirant un pourcentage de cases en fonction du paramètre.
+On génère une grille complète et on enleve des cases pour jouer
 }

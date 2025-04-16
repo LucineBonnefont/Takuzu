@@ -2,22 +2,16 @@
 % Please edit documentation in R/verif.R
 \name{check_takuzu}
 \alias{check_takuzu}
-\title{Vérifie qu'une valeur dans le jeu de Takuzu est valide}
+\title{Vérifie qu'une grille Takuzu est valide}
 \usage{
-check_takuzu(board)
-
 check_takuzu(board)
 }
 \arguments{
-\item{board}{Une matrice \code{n x n} de 0 et 1 (pas de \code{NA}).}
+\item{board}{Une matrice n x n de 0 et 1.}
 }
 \value{
-\code{TRUE} si la grille est valide, \code{FALSE} sinon.
-
-oui ou non
+TRUE si la grille est valide, FALSE sinon.
 }
 \description{
-Vérifie si la valeur placée dans la cellule (row, col) ne viole pas les règles du Takuzu.
-
-pour le bouton verification
+Cette fonction s'assure qu'une grille complète (sans NA) respecte les règles du Takuzu
 }

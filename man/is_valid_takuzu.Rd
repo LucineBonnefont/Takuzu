@@ -2,7 +2,7 @@
 % Please edit documentation in R/verif.R
 \name{is_valid_takuzu}
 \alias{is_valid_takuzu}
-\title{titrev4}
+\title{Is_valid_oui_ou_non}
 \usage{
 is_valid_takuzu(grid)
 }
@@ -10,5 +10,5 @@ is_valid_takuzu(grid)
 oui ou non
 }
 \description{
-pour le bouton verification encore et encore
+Est ce que la valeur rentré est juste ? cette fonction verifie ligne par ligne et colonne par colonne
 }

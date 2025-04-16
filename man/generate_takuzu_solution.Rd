@@ -13,7 +13,5 @@ generate_takuzu_solution(n)
 Une matrice \code{n x n} avec de 0 et 1.
 }
 \description{
-Cette fonction interne construit une grille entièrement résolue (pas de NA),
-respectant les règles du Takuzu. Elle utilise une approche backtracking pour
-remplir la grille case par case.
+Tout est dans le titre
 }

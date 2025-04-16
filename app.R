@@ -10,14 +10,12 @@ ui <- fluidPage(
   
   div(class = "background"),
   
-  # Menu
   div(id = "welcome", class = "screen",
       h1("TAKUZU", class = "title"),
       actionButton("start", "Je relève le défi", class = "btn-custom"),
       actionButton("rules_button", "?", class = "btn-rules")
-      ),
+  ),
   
-  # Section des règles du jeu
   hidden(div(id = "rules", class = "screen",
              div(class = "parameters-zone",
                  h2("Règles du jeu TAKUZU", class = "title"),
@@ -26,13 +24,13 @@ ui <- fluidPage(
                    tags$li("Les cases vides doivent être remplies avec un 0 ou un 1."),
                    tags$li("Chaque ligne et chaque colonne doivent contenir autant de 0 que de 1."),
                    tags$li("Il ne peut pas y avoir plus de deux chiffres identiques consécutifs."),
-                   tags$li("Le jeu est terminé lorsque toutes les cases sont correctement remplies.")
+                   tags$li("Le jeu est terminé lorsque toutes les cases sont correctement remplies."),
+                   tags$li("Bon jeu")
                  ),
                  actionButton("close_rules", "Fermer", class = "btn-custom")
              )
   )),
   
-  # Paramètre pour le joueur
   hidden(div(id = "parameters", class = "screen",
              div(class = "parameters-zone",
                  h2("TAKUZU", class = "title"),
@@ -49,7 +47,6 @@ ui <- fluidPage(
              )
   )),
   
-  # Zone de jeu
   hidden(div(id = "game", class = "screen",
              h2("TAKUZU", class = "title"),
              uiOutput("gridUI"),
@@ -68,9 +65,9 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   
-  puzzle <- reactiveVal(NULL)
-  grid_size <- reactiveVal(NULL)
-  puzzleID <- reactiveVal(0)
+  grilleCourante <- reactiveVal(NULL)
+  tailleGrille <- reactiveVal(NULL)
+  idGrille <- reactiveVal(0)
   
   observeEvent(input$start, {
     hide("welcome")
@@ -87,25 +84,25 @@ server <- function(input, output, session) {
     show("welcome")
   })
   
-  observeEvent(input$size_4, { grid_size(4) })
-  observeEvent(input$size_6, { grid_size(6) })
-  observeEvent(input$size_8, { grid_size(8) })
+  observeEvent(input$size_4, { tailleGrille(4) })
+  observeEvent(input$size_6, { tailleGrille(6) })
+  observeEvent(input$size_8, { tailleGrille(8) })
   
   observeEvent(input$generate, {
-    req(grid_size())
-    puzzleID(puzzleID() + 1)
-    new_puzzle <- generate_takuzu(n = grid_size(), difficulty = input$difficulty)
-    puzzle(new_puzzle)
+    req(tailleGrille())
+    idGrille(idGrille() + 1)
+    nouvelleGrille <- generate_takuzu(n = tailleGrille(), difficulty = input$difficulty)
+    grilleCourante(nouvelleGrille)
     hide("parameters")
     show("game")
     output$result <- renderText("")
   })
   
   observeEvent(input$new_grid, {
-    req(grid_size())
-    puzzleID(puzzleID() + 1)
-    new_puzzle <- generate_takuzu(n = grid_size(), difficulty = input$difficulty)
-    puzzle(new_puzzle)
+    req(tailleGrille())
+    idGrille(idGrille() + 1)
+    nouvelleGrille <- generate_takuzu(n = tailleGrille(), difficulty = input$difficulty)
+    grilleCourante(nouvelleGrille)
     hide("parameters")
     show("game")
     output$result <- renderText("")
@@ -116,71 +113,54 @@ server <- function(input, output, session) {
     show("parameters")
   })
   
- 
-  
-  combinedGrid <- reactive({
-    req(puzzle())
-    grid <- puzzle()
-    n <- nrow(grid)
+  grilleCombinee <- reactive({
+    req(grilleCourante())
+    gr <- grilleCourante()
+    n <- nrow(gr)
     for (i in seq_len(n)) {
       for (j in seq_len(n)) {
-        if (is.na(grid[i, j])) {
-          cell_id <- paste0("cell_", puzzleID(), "_", i, "_", j)
-          val <- input[[cell_id]]
-          if (!is.null(val)) {
-            grid[i, j] <- as.numeric(val)
+        if (is.na(gr[i, j])) {
+          cid <- paste0("case_", idGrille(), "_", i, "_", j)
+          valeur <- input[[cid]]
+          if (!is.null(valeur)) {
+            gr[i, j] <- as.numeric(valeur)
           }
         }
       }
     }
-    grid
+    gr
   })
   
   output$gridUI <- renderUI({
-    req(puzzle())
-    originalGrid <- puzzle()
-    userGrid <- combinedGrid()
-    n <- nrow(originalGrid)
-    feedback <- takuzu_feedback(userGrid)
+    req(grilleCourante())
+    grOriginale <- grilleCourante()
+    grUtilisateur <- grilleCombinee()
+    n <- nrow(grOriginale)
+    retour <- takuzu_feedback(grUtilisateur)
     
     tags$table(
       style = "border-collapse: collapse;",
       lapply(seq_len(n), function(i) {
         tags$tr(
           lapply(seq_len(n), function(j) {
-            cell_id <- paste0("cell_", puzzleID(), "_", i, "_", j)
+            cid <- paste0("case_", idGrille(), "_", i, "_", j)
             
-            if (!is.na(originalGrid[i, j])) {
+            if (!is.na(grOriginale[i, j])) {
               tags$td(
-                originalGrid[i, j],
-                style = "
-                  border: 1px solid #ccc;
-                  padding: 5px;
-                  text-align: center;
-                  width: 60px;
-                  height: 60px;
-                  background-color: #f0f0f0;
-                  font-weight: bold;
-                "
+                grOriginale[i, j],
+                style = "border: 1px solid #ccc; padding: 5px; text-align: center; width: 60px; height: 60px; background-color: #f0f0f0; font-weight: bold;"
               )
             } else {
-              bg_color <- if (!is.na(userGrid[i, j]) && !feedback[i, j]) "red" else "#ffffff"
+              couleur <- if (!is.na(grUtilisateur[i, j]) && !retour[i, j]) "red" else "#ffffff"
               tags$td(
                 numericInput(
-                  inputId = cell_id,
+                  inputId = cid,
                   label = NULL,
-                  value = if (!is.na(userGrid[i, j])) userGrid[i, j] else NA,
+                  value = if (!is.na(grUtilisateur[i, j])) grUtilisateur[i, j] else NA,
                   min = 0, max = 1, step = 1,
                   width = "50px"
                 ),
-                style = paste0("
-                  border: 1px solid #ccc;
-                  padding: 5px;
-                  text-align: center;
-                  width: 60px;
-                  height: 60px;
-                  background-color: ", bg_color, ";
-                ")
+                style = paste0("border: 1px solid #ccc; padding: 5px; text-align: center; width: 60px; height: 60px; background-color: ", couleur, ";")
               )
             }
           })
@@ -190,12 +170,11 @@ server <- function(input, output, session) {
   })
   
   observe({
-    req(combinedGrid())
-    grid <- combinedGrid()
-    
-    if (!any(is.na(grid)) && is_solved_takuzu(grid)) {
+    req(grilleCombinee())
+    gr <- grilleCombinee()
+    if (!any(is.na(gr)) && is_solved_takuzu(gr)) {
       shinyjs::show("congratsMessage")
-      output$result <- renderText("")  # ou garde le message si tu veux aussi
+      output$result <- renderText("")
     } else {
       shinyjs::hide("congratsMessage")
       output$result <- renderText("")

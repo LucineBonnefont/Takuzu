@@ -2,21 +2,21 @@
 % Please edit documentation in R/gen.R
 \name{fill_board}
 \alias{fill_board}
-\title{Backtracking}
+\title{Backtracking pour avoir une grille complète juste}
 \usage{
-fill_board(board, row, col)
+fill_board(X, ligne, col)
 }
 \arguments{
+\item{col}{Numéro de la colonne en cours.}
+
 \item{board}{Matrice en cours de remplissage.}
 
 \item{row}{Numéro de la ligne en cours.}
-
-\item{col}{Numéro de la colonne en cours.}
 }
 \value{
 La matrice complétée si une solution est trouvée, ou \code{NULL} sinon.
 }
 \description{
-#' Remplit récursivement la grille en utilisant un algorithme de backtracking pour obtenir une solution complète de Takuzu.
+#' Remplir récursivement la grille avec Backtracking
 }
 \keyword{internal}
