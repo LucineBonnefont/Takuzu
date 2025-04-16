@@ -1,6 +1,6 @@
 #' Backtracking pour avoir une grille complète juste
 #'
-#' #' Remplit récursivement la grille en utilisant un algorithme de backtracking pour obtenir une solution complète de Takuzu.
+#' #' Remplir récursivement la grille avec Backtracking
 #'
 #' @param board Matrice en cours de remplissage.
 #' @param row Numéro de la ligne en cours.
@@ -45,9 +45,8 @@ fill_board <- function(board, row, col) {
 
 #' Génère une solution Takuzu complète
 #'
-#' Cette fonction interne construit une grille entièrement résolue (pas de NA),
-#' respectant les règles du Takuzu. Elle utilise une approche backtracking pour
-#' remplir la grille case par case.
+#' Tout est dans le titre
+#' 
 #'
 #' @param n  taille de la grille (doit être pair (ex. 6, 8).)
 #' @return Une matrice \code{n x n} avec de 0 et 1.
@@ -64,7 +63,7 @@ generate_takuzu_solution <- function(n) {
 
 #' Génère un puzzle Takuzu
 #'
-#' On génère une grille complète et on enleve des cases 
+#' On génère une grille complète et on enleve des cases pour jouer
 #'
 #' @param n taille
 #' @param difficulty proportion enlevé
@@ -128,14 +127,13 @@ is_valid_so_far <- function(board, row, col) {
     }
   }
   
-  # --- Vérification sur la colonne ---
   col_values <- board[, col]
   
-  # 1) Pas plus de 2 identiques consécutifs
+  #  pas 2 identiques d'affilé
   if (has_three_consecutive(col_values)) {
     return(FALSE)
   }
-  # 2) Si la colonne est complète (pas de NA), elle doit contenir autant de 0 que de 1
+  # colone pleine -> autant de 1 que 0
   if (!any(is.na(col_values))) {
     if (sum(col_values == 0) != sum(col_values == 1)) {
       return(FALSE)

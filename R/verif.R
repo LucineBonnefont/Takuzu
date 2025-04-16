@@ -4,7 +4,7 @@
 #' 
 #'
 #' @param board Une matrice \code{n x n} de 0, 1 et éventuellement \code{NA}.
-#' @return Une matrice logique de dimension \code{n x n}.
+#' @return Une matrice de dimension \code{n x n}.
 #' @export
 takuzu_feedback <- function(board) {
   n <- nrow(board)
@@ -12,7 +12,7 @@ takuzu_feedback <- function(board) {
   for (i in 1:n) {
     for (j in 1:n) {
       if (!is.na(board[i, j])) {
-        # On utilise is_valid_so_far pour vérifier la validité locale de la cellule
+        # On utilise is_valid_so_far pou la validité locale de la cellule
         feedback[i, j] <- is_valid_so_far(board, i, j)
       }
     }
