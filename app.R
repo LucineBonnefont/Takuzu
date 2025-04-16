@@ -5,40 +5,34 @@ library(takuzu)
 ui <- fluidPage(
   useShinyjs(),
   tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
-    
-    # Inclusion du script de confetti
-    tags$script(src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"),
-    tags$script(HTML("
-      Shiny.addCustomMessageHandler('confetti', function(message) {
-        confetti({
-          spread: 5000,
-          particleCount: 7000,
-          origin: { x: 0.5, y: 1.45 },
-          gravity: 0.5,
-          startVelocity: 100,
-          ticks: 200,
-          colors: ['#FF5733', '#FF33FF', '#33FFF3', '#FFD700', '#FF0000', '#00FF00', '#1E90FF'],
-          shapes: ['circle', 'square', 'triangle'],
-          angle: 90,
-          angleVariation: 5000,
-          decay: 0.9,
-          drift: 0,
-          gravity: 0.4
-        });
-      });
-    "))
+    tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
   ),
   
   div(class = "background"),
   
-  #menu
+  # Menu
   div(id = "welcome", class = "screen",
       h1("TAKUZU", class = "title"),
-      actionButton("start", "Je relève le défi", class = "btn-custom")
-  ),
+      actionButton("start", "Je relève le défi", class = "btn-custom"),
+      actionButton("rules_button", "?", class = "btn-rules")
+      ),
   
-  #parametre pour le joueur
+  # Section des règles du jeu
+  hidden(div(id = "rules", class = "screen",
+             div(class = "parameters-zone",
+                 h2("Règles du jeu TAKUZU", class = "title"),
+                 p("Voici les règles pour résoudre une grille de TAKUZU :"),
+                 tags$ul(
+                   tags$li("Les cases vides doivent être remplies avec un 0 ou un 1."),
+                   tags$li("Chaque ligne et chaque colonne doivent contenir autant de 0 que de 1."),
+                   tags$li("Il ne peut pas y avoir plus de deux chiffres identiques consécutifs."),
+                   tags$li("Le jeu est terminé lorsque toutes les cases sont correctement remplies.")
+                 ),
+                 actionButton("close_rules", "Fermer", class = "btn-custom")
+             )
+  )),
+  
+  # Paramètre pour le joueur
   hidden(div(id = "parameters", class = "screen",
              div(class = "parameters-zone",
                  h2("TAKUZU", class = "title"),
@@ -55,7 +49,7 @@ ui <- fluidPage(
              )
   )),
   
-  #zone de jeu
+  # Zone de jeu
   hidden(div(id = "game", class = "screen",
              h2("TAKUZU", class = "title"),
              uiOutput("gridUI"),
@@ -63,7 +57,12 @@ ui <- fluidPage(
                  actionButton("edit_parameters", "Modifier les paramètres", class = "btn-custom"),
                  actionButton("new_grid", "Nouvelle grille", class = "btn-custom")
              ),
-             textOutput("result")
+             div(
+               id = "congratsMessage",
+               class = "congrats",
+               style = "display: none;",
+               "Félicitations ! La grille est correctement résolue 🎉"
+             )
   ))
 )
 
@@ -71,13 +70,21 @@ server <- function(input, output, session) {
   
   puzzle <- reactiveVal(NULL)
   grid_size <- reactiveVal(NULL)
-  
-  # Identifiant unique pour le puzzle afin d'éviter la réutilisation d'inputId
   puzzleID <- reactiveVal(0)
   
   observeEvent(input$start, {
     hide("welcome")
     show("parameters")
+  })
+  
+  observeEvent(input$rules_button, {
+    hide("welcome")
+    show("rules")
+  })
+  
+  observeEvent(input$close_rules, {
+    hide("rules")
+    show("welcome")
   })
   
   observeEvent(input$size_4, { grid_size(4) })
@@ -86,7 +93,7 @@ server <- function(input, output, session) {
   
   observeEvent(input$generate, {
     req(grid_size())
-    puzzleID(puzzleID() + 1)  # Incrémente l'ID pour la nouvelle grille
+    puzzleID(puzzleID() + 1)
     new_puzzle <- generate_takuzu(n = grid_size(), difficulty = input$difficulty)
     puzzle(new_puzzle)
     hide("parameters")
@@ -109,6 +116,8 @@ server <- function(input, output, session) {
     show("parameters")
   })
   
+ 
+  
   combinedGrid <- reactive({
     req(puzzle())
     grid <- puzzle()
@@ -116,7 +125,6 @@ server <- function(input, output, session) {
     for (i in seq_len(n)) {
       for (j in seq_len(n)) {
         if (is.na(grid[i, j])) {
-          # Incorporation de puzzleID dans l'inputId
           cell_id <- paste0("cell_", puzzleID(), "_", i, "_", j)
           val <- input[[cell_id]]
           if (!is.null(val)) {
@@ -181,19 +189,19 @@ server <- function(input, output, session) {
     )
   })
   
-# Quand on gange c'est la fête  
   observe({
     req(combinedGrid())
     grid <- combinedGrid()
     
     if (!any(is.na(grid)) && is_solved_takuzu(grid)) {
-      session$sendCustomMessage("confetti", list())
-      output$result <- renderText("Félicitations ! La grille est correctement résolue.")
+      shinyjs::show("congratsMessage")
+      output$result <- renderText("")  # ou garde le message si tu veux aussi
     } else {
+      shinyjs::hide("congratsMessage")
       output$result <- renderText("")
     }
   })
+  
 }
 
 shinyApp(ui = ui, server = server)
-

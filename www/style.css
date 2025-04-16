@@ -39,6 +39,84 @@ body, html {
     margin-top: 30px; /* Descend le titre */
 }
 
+/* Bouton rond "?" pour les règles */
+.btn-rules {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #678DC6; /* Même couleur que les autres boutons */
+  color: white;
+  border: 3px solid #39417F; /* Même bordure que les autres boutons */
+  font-size: 3rem; /* Taille du "?" (ajustée ici) */
+  cursor: pointer;
+  border-radius: 50%; /* Rendre le bouton rond */
+  width: 60px; /* Taille du bouton (ajustée ici pour avoir assez d'espace pour le texte) */
+  height: 60px; /* Taille du bouton (ajustée ici pour avoir assez d'espace pour le texte) */
+  text-align: center;
+  line-height: 50px; /* Centrer le texte verticalement dans le rond */
+  transition: 0.3s ease; /* Ajout de la transition pour les effets */
+}
+
+/* Effet de survol */
+.btn-rules:hover {
+  background-color: #93B3E4; /* Changer la couleur au survol comme les autres boutons */
+  border: 3px solid #39417F;
+  color: white;
+  transform: scale(1.1); /* Ajouter un effet de zoom au survol */
+}
+
+/* Effet de clic */
+.btn-rules:active {
+  background-color: #39417F; /* Effet de clic : couleur sombre comme sur les autres boutons */
+  transform: scale(0.95); /* Réduire légèrement la taille au clic */
+}
+
+
+
+
+/* Apparence de la modal */
+.modal {
+  display: none; /* caché par défaut */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4); /* fond semi-transparent */
+  padding-top: 60px;
+}
+
+/* Contenu de la modal */
+.modal-content {
+  background-color: white;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.modal-content h2 {
+  font-size: 1.5em;
+  color: #333;
+}
+
+.modal-content p {
+  font-size: 1.2em;
+  color: #555;
+}
+
+.modal-content ul {
+  text-align: left;
+  font-size: 1.1em;
+  color: #444;
+}
+
+
+
 /* Boutons dans l'écran des paramètres */
 .btn-size {
     font-size: 1.5rem;
@@ -194,3 +272,57 @@ body, html {
 #game .btn-custom {
     margin-bottom: 15px; /* Espace entre les boutons */
     }
+    
+    
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
+
+.congrats {
+  font-family: 'Dancing Script', cursive;
+  font-size: 3em; /* Taille réduite pour que ce ne soit pas trop gros */
+  font-weight: bold;
+  text-align: center;
+  margin: 40px auto;
+  background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: absolute; /* Positionnement absolu pour garder le texte au bas */
+  bottom: 40px; /* Placer le texte à 40px du bas de l'écran */
+  left: 50%;
+  transform: translateX(-50%); /* Centre horizontalement */
+  opacity: 0; /* Commence avec une opacité nulle */
+  animation: neonGlow 1.5s ease-in-out infinite alternate, fallIn 1s ease-out forwards; /* Combinaison d'animations */
+}
+
+@keyframes neonGlow {
+  0% {
+    text-shadow: 0 0 10px rgba(44, 83, 100, 0.5), 0 0 20px rgba(44, 83, 100, 0.5);
+    opacity: 1;
+  }
+  50% {
+    text-shadow: 0 0 40px rgba(44, 83, 100, 0.8), 0 0 60px rgba(44, 83, 100, 0.8);
+    opacity: 1;
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(44, 83, 100, 0.5), 0 0 20px rgba(44, 83, 100, 0.5);
+    opacity: 1;
+  }
+}
+
+@keyframes fallIn {
+  0% {
+    transform: translateX(-50%) translateY(-100vh); /* Commence au-dessus de l'écran */
+    opacity: 0; /* Transparent au départ */
+  }
+  100% {
+    transform: translateX(-50%) translateY(0); /* Arrive à la position finale */
+    opacity: 1; /* Devient pleinement visible */
+  }
+}
+
+
+
+
+
+
+
+    
