@@ -44,9 +44,6 @@ install.packages(c("shiny", "shinyjs"))
 - Lucine BONNEFONT
 - Damien MARIAC
 
-Nous espérons que vous apprécierez ce jeu et qu'il vous offrira de nombreux défis amusants !
-
-## Remarques
-Si vous rencontrez des problèmes ou si vous avez des questions, n'hésitez pas à ouvrir une issue ou à nous contacter via GitHub. Amusez-vous bien avec Takuzu !
+Nous espérons que vous apprécierez ce jeu !
 
 
