@@ -25,7 +25,7 @@ ui <- fluidPage(
                    tags$li("Chaque ligne et chaque colonne doivent contenir autant de 0 que de 1."),
                    tags$li("Il ne peut pas y avoir plus de deux chiffres identiques consécutifs."),
                    tags$li("Le jeu est terminé lorsque toutes les cases sont correctement remplies."),
-                   tags$li("Bon jeu")
+                   tags$li("Bon jeu!")
                  ),
                  actionButton("close_rules", "Fermer", class = "btn-custom")
              )
